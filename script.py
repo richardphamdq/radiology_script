@@ -37,7 +37,7 @@ def prompt_for_price(item_name: str) -> float:
     print(f"Item: {item_name}")
 
     while True:
-        val = input("RDU (will be multiplied by 55) > ").strip()
+        val = input("RDU (will be multiplied by number that you enter) > ").strip()
         try:
             return float(val)
         except ValueError:
@@ -152,6 +152,14 @@ def add_price_and_split_by_facility(
 
     prices = []
 
+    while True:
+        val = input("Enter price RDU will be multiplied by: ").strip()
+        try:
+            rdu_multiple = float(val)
+            break
+        except ValueError:
+            print("Please enter a valid number.")
+
     for row_index, name in enumerate(main_df[input_name_column], start=2):
         key = normalize_name(name)
 
@@ -161,11 +169,11 @@ def add_price_and_split_by_facility(
             continue
 
         if key in price_map:
-            prices.append(price_map[key] * 55)
+            prices.append(round(price_map[key] * rdu_multiple, 2))
         else:
             print(f"\nRow {row_index} - Unrecognized name: {name}")
             price = prompt_for_price(str(name))
-            prices.append(price * 55)
+            prices.append(round(price * rdu_multiple, 2))
 
             price_map[key] = price
 
